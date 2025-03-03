@@ -1,57 +1,95 @@
+// src/views/Home.vue
+<script setup>
+import bookingImage from '../assets/booking.svg';
+import videoCallImage from '../assets/video-call.svg';
+</script>
+
 <template>
-  <div class="container">
-    <h1>Välkommen till vårdappen</h1>
-    
-    <!-- Starta ett nytt rum -->
-    <button @click="createRoom" class="button">Starta videosamtal</button>
+  <div class="home-container">
+    <header class="header">
+      <h1>Vårdappen - Träffa din läkare online</h1>
+      <p>Boka videosamtal med en läkare enkelt och smidigt.</p>
+      <div class="nav-buttons">
+        <router-link to="/bookings" class="button">Boka Tid</router-link>
+        <router-link to="/doctor" class="button secondary">Läkarens Profil</router-link>
+      </div>
+    </header>
 
-    <!-- Ange ett rums ID för att gå med -->
-    <input v-model="roomName" placeholder="Ange rumskod" />
-    <button @click="joinRoom" class="button">Gå med</button>
-
-    <!-- Visa och kopiera länken till mötet -->
-    <div v-if="roomLink">
-      <p>Kopiera länken och skicka till din vän:</p>
-      <input type="text" :value="roomLink" readonly @click="copyLink" />
-      <p v-if="copied">Länk kopierad!</p>
-    </div>
+    <section class="features">
+      <div class="feature">
+        <img :src="bookingImage" alt="Boka tid">
+        <h2>Snabb och säker bokning</h2>
+        <p>Boka ett möte med några få klick.</p>
+      </div>
+      <div class="feature">
+        <img :src="videoCallImage" alt="Videosamtal">
+        <h2>Träffa läkare online</h2>
+        <p>Gör ditt möte var du än är.</p>
+      </div>
+    </section>
   </div>
 </template>
 
-<script>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+<style>
+.home-container {
+  text-align: center;
+  padding: 40px;
+}
 
-export default {
-  setup() {
-    const router = useRouter();
-    const roomName = ref('');
-    const roomLink = ref('');
-    const copied = ref(false);
+.header {
+  background: linear-gradient(135deg, #3498db, #2ecc71);
+  color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-    // Skapa ett unikt rums ID och generera en länk
-    function createRoom() {
-      const randomRoom = "VardApp-" + Math.random().toString(36).substr(2, 9);
-      // Använd den externa URL en i stället för localhost
-      roomLink.value = `${window.location.origin}/video-call/${randomRoom}`;
-      router.push(`/video-call/${randomRoom}`);
-    }
+.nav-buttons {
+  margin-top: 20px;
+}
 
-    // Användare anger ett rum och går med
-    function joinRoom() {
-      if (roomName.value.trim() !== "") {
-        router.push(`/video-call/${roomName.value}`);
-      }
-    }
+.button {
+  display: inline-block;
+  padding: 14px 24px;
+  margin: 10px;
+  background-color: #2ecc71;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 18px;
+  transition: background 0.3s ease-in-out;
+}
 
-    // Kopiera rums länken till urklipp
-    function copyLink() {
-      navigator.clipboard.writeText(roomLink.value);
-      copied.value = true;
-      setTimeout(() => (copied.value = false), 2000); // Visa Länk kopierad! i 2 sekunder
-    }
+.button:hover {
+  background-color: #27ae60;
+}
 
-    return { roomName, roomLink, copied, createRoom, joinRoom, copyLink };
-  },
-};
-</script>
+.button.secondary {
+  background-color: #e67e22;
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.feature {
+  width: 45%;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.feature:hover {
+  transform: scale(1.05);
+}
+
+.feature img {
+  width: 80px;
+  margin-bottom: 10px;
+}
+</style>
